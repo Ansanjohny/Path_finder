@@ -1,5 +1,5 @@
 {
-    "name": "pathway-questionnaire",
+    "name": "Path_finder",
     "version": "1.0.0",
     "description": "A questionnaire app to recommend pathways.",
     "scripts": {
