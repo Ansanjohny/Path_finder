@@ -1,0 +1,12 @@
+{
+    "name": "pathway-questionnaire",
+    "version": "1.0.0",
+    "description": "A questionnaire app to recommend pathways.",
+    "scripts": {
+      "start": "serve public"
+    },
+    "dependencies": {
+      "serve": "^14.2.0"
+    }
+  }
+  
