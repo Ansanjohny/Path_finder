@@ -11,6 +11,5 @@
       "src": "/(.*)",
       "dest": "/public/index.html"
     }
-  ],
-  "outputDirectory": "public" // Optional: If your build generates files to a specific directory
+  ]
 }
