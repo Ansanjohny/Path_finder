@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pathway Identification Questionnaire</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #f9f2e4;
+      font-size: 0.85rem;
+    }
+
+    .container {
+      max-width: 700px;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-box {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border: 1px solid #e9ecef;
+      border-radius: 5px;
+      background-color: #f1f3f5;
+      font-size: 0.85rem;
+    }
+
+    .question-box h4 {
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .options-table {
+      width: 100%;
+      margin-top: 0.5rem;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .options-table td {
+      padding: 0.3rem;
+      border: 1px solid #e9ecef;
+    }
+
+    label {
+      font-size: 0.85rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      padding: 0.3rem 1rem;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+
+    .result-box {
+      display: none;
+      text-align: left;
+    }
+
+    .result-heading {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .bold-text {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container" id="quiz-container">
+  <h1 style="font-size: 1.2rem; text-align: center;">Pathway Identification Questionnaire</h1>
+  <p style="font-size: 0.85rem; text-align: center;">Instructions: For each question, select the options that best describe you.</p>
+  
+  <div id="start-screen">
+    <button class="start" onclick="startQuiz()">Start Questionnaire</button>
+  </div>
+
+  <div id="question-box" class="question-box" style="display: none;">
+    <p id="progress" style="font-size: 0.85rem; font-weight: bold;">Question No: 1 / 8</p>
+    <h4 id="question-text">Question</h4>
+    <table class="options-table" id="options-container"></table>
+    <div class="button-container">
+      <button class="prev" onclick="prevQuestion()" style="display: none;">Prev</button>
+      <button class="next" onclick="nextQuestion()">Next</button>
+    </div>
+  </div>
+
+  <div class="result-box" id="result-box">
+    <h2 style="font-size: 1.1rem;">Your Recommended Pathway:</h2>
+    <p class="bold-text" id="recommended-pathway"></p>
+    <hr>
+    <div class="result-heading">Detailed Scores:</div>
+    <p><strong>Maker (A):</strong> <span id="score-a" class="bold-text">0</span></p>
+    <p><strong>Coder (B):</strong> <span id="score-b" class="bold-text">0</span></p>
+    <p><strong>Designer (C):</strong> <span id="score-c" class="bold-text">0</span></p>
+    <p><strong>Others (D):</strong> <span id="score-d" class="bold-text">0</span></p>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      question: "What kind of activities do you enjoy the most?",
+      options: [
+        { text: "A) Building or crafting physical projects and experimenting with new materials.", category: "A" },
+        { text: "B) Coding and creating software solutions or working with technology.", category: "B" },
+        { text: "C) Designing visual elements, user interfaces, or developing creative content.", category: "C" },
+        { text: "D) Managing projects, understanding market needs, or exploring new knowledge areas.", category: "D" }
+      ]
+    },
+    {
+      question: "Which of the following skills do you want to improve or develop?",
+      options: [
+        { text: "A) Robotics, 3D printing, or IoT-based projects.", category: "A" },
+        { text: "B) Programming, debugging, or developing new applications and algorithms.", category: "B" },
+        { text: "C) Visual communication, UX/UI design, or multimedia creation.", category: "C" },
+        { text: "D) Leadership, marketing, research, or analysis skills.", category: "D" }
+      ]
+    },
+    {
+      question: "How do you approach problem-solving?",
+      options: [
+        { text: "A) By physically experimenting, creating prototypes, and iterating based on testing.", category: "A" },
+        { text: "B) By writing code, creating logical solutions, and troubleshooting issues.", category: "B" },
+        { text: "C) By brainstorming creative approaches, sketching, or creating visual solutions.", category: "C" },
+        { text: "D) By analyzing the problem holistically, researching, and planning solutions with strategic thinking.", category: "D" }
+      ]
+    },
+    {
+      question: "Which tools or resources are you most interested in using or learning?",
+      options: [
+        { text: "A) Electronic components, fabrication tools, robotics kits.", category: "A" },
+        { text: "B) Programming languages, development frameworks, software tools.", category: "B" },
+        { text: "C) Graphic design tools, wireframing software, creative suites.", category: "C" },
+        { text: "D) Business models, research papers, management tools, or policy frameworks.", category: "D" }
+      ]
+    },
+    {
+      question: "What kind of project excites you the most?",
+      options: [
+        { text: "A) Creating a new physical device, electronic gadget, or automated system.", category: "A" },
+        { text: "B) Developing an app, creating a software tool, or building a machine learning model.", category: "B" },
+        { text: "C) Designing a logo, improving a website’s user experience, or making digital illustrations.", category: "C" },
+        { text: "D) Organizing an event, analyzing data trends, developing a new business idea.", category: "D" }
+      ]
+    },
+    {
+      question: "Which statement resonates most with your aspirations?",
+      options: [
+        { text: "A) I want to bring my ideas to life by building things with my hands.", category: "A" },
+        { text: "B) I want to create impactful digital solutions and applications.", category: "B" },
+        { text: "C) I want to communicate stories and ideas through design and visuals.", category: "C" },
+        { text: "D) I want to lead, strategize, and innovate to solve broader problems.", category: "D" }
+      ]
+    },
+    {
+      question: "In a team project, you usually prefer to:",
+      options: [
+        { text: "A) Take the lead in building and assembling the project.", category: "A" },
+        { text: "B) Handle the technical aspects and coding of the project.", category: "B" },
+        { text: "C) Focus on the design and presentation of the project.", category: "C" },
+        { text: "D) Organize the project, plan timelines, and ensure communication.", category: "D" }
+      ]
+    },
+    {
+      question: "What motivates you the most?",
+      options: [
+        { text: "A) The thrill of creating something tangible and functional.", category: "A" },
+        { text: "B) Solving complex problems and coding challenges.", category: "B" },
+        { text: "Creating visually appealing designs that communicate effectively.", category: "C" },
+        { text: "D) Leading a team to success and achieving strategic goals.", category: "D" }
+      ]
+    }
+  ];
+
+  const scores = {
+    A: 0,
+    B: 0,
+    C: 0,
+    D: 0
+  };
+
+  let currentQuestionIndex = 0;
+
+  function startQuiz() {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("question-box").style.display = "block";
+    displayQuestion();
+  }
+
+  function displayQuestion() {
+    const currentQuestion = questions[currentQuestionIndex];
+    document.getElementById("progress").innerText = `Question No: ${currentQuestionIndex + 1} / ${questions.length}`;
+    document.getElementById("question-text").innerText = currentQuestion.question;
+    
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+
+    currentQuestion.options.forEach(option => {
+      const row = document.createElement("tr");
+      const optionCell = document.createElement("td");
+      optionCell.innerHTML = `
+        <label>
+          <input type="checkbox" name="option" value="${option.category}">
+          ${option.text}
+        </label>
+      `;
+      row.appendChild(optionCell);
+      optionsContainer.appendChild(row);
+    });
+  }
+
+  function nextQuestion() {
+    const selectedOptions = document.querySelectorAll("input[name='option']:checked");
+    
+    if (selectedOptions.length > 0) {
+      selectedOptions.forEach(option => {
+        scores[option.value]++;
+      });
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) {
+        displayQuestion();
+      } else {
+        showResults();
+      }
+    } else {
+      alert("Please select at least one option to proceed.");
+    }
+  }
+
+  function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      displayQuestion();
+    }
+  }
+
+  function showResults() {
+    document.getElementById("question-box").style.display = "none";
+    document.getElementById("result-box").style.display = "block";
+
+    const recommendedPathway = getRecommendedPathway();
+    document.getElementById("recommended-pathway").innerText = recommendedPathway;
+
+    document.getElementById("score-a").innerText = scores.A;
+    document.getElementById("score-b").innerText = scores.B;
+    document.getElementById("score-c").innerText = scores.C;
+    document.getElementById("score-d").innerText = scores.D;
+  }
+
+  function getRecommendedPathway() {
+    const maxScore = Math.max(scores.A, scores.B, scores.C, scores.D);
+    if (scores.A === maxScore) {
+      return "Maker";
+    } else if (scores.B === maxScore) {
+      return "Coder";
+    } else if (scores.C === maxScore) {
+      return "Designer";
+    } else {
+      return "Others";
+    }
+  }
+</script>
+</body>
+</html>
